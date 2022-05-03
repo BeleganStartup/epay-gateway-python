@@ -4,7 +4,7 @@ from pathlib import Path
 
 CURRENT_PYTHON = sys.version_info[:2]
 REQUIRED_PYTHON = (2, 7)
-version = '0.1'
+version = '0.2'
 
 
 this_directory = Path(__file__).parent
