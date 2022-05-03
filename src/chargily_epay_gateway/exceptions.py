@@ -1,9 +1,11 @@
 
 CHARGILY_ERROR_CODE_SIGNATURE_MISSING = 1
+CHARGILY_ERROR_CODE_KEY_MISSING = 2
 
 
 CHARGILY_ERROR_CODES = [
     CHARGILY_ERROR_CODE_SIGNATURE_MISSING,
+    CHARGILY_ERROR_CODE_KEY_MISSING
 ]
 
 
@@ -34,3 +36,11 @@ class ChargilyErrorSignatureMissing(ChargilyErrorBase):
     def __init__(self, key, *args):
         super().__init__(error_code=self.class_error_code, *args)
         self.chargily_msg = '{} is not provided.'.format(key.title())
+
+
+class ChargilyErrorKeyMissing(ChargilyErrorBase):
+    class_error_code = CHARGILY_ERROR_CODE_KEY_MISSING
+
+    def __init__(self, key, *args):
+        super().__init__(error_code=self.class_error_code, *args)
+        self.chargily_msg = 'Loading {} fail, did you set it correclty?'.format(key)

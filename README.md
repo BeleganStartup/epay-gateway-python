@@ -44,10 +44,9 @@ from chargily_epay_gateway.api import Invoice
 
 CHARGILY_API_KEY = os.environ["CHARGILY_API_KEY"]
 
-invoice = Invoice(CHARGILY_API_KEY)
 
-
-invoice_payment = invoice.make_payment(
+invoice_payment = Invoice(CHARGILY_API_KEY)
+invoice = invoice_payment.make_payment(
     client='Client name goes here',
     client_email='Client email goes here',
     invoice_number='Invoice number as integer',
@@ -59,11 +58,11 @@ invoice_payment = invoice.make_payment(
     comment='Comment goes here',
 )
 
-invoice.get_invoice_content()  # Return invoice data as python data structure
+invoice_payment.get_invoice()  # Return the invoice as requests Response instance
 
-Invoice.load_invoice(invoice_payment)  # Also return invoice data as python data structure
+invoice_payment.get_invoice_content()  # Return invoice data as python data structure
 
-invoice.get_invoice()  # Return the invoice as response
+Invoice.load_invoice(invoice.content)  # Also return invoice data as python data structure
 ```
 
 * Function based way:
@@ -75,7 +74,7 @@ from chargily_epay_gateway.api import make_payment
 CHARGILY_API_KEY = os.environ["CHARGILY_API_KEY"]
 
 
-invoice = make_payment(
+invoice = make_payment(  # Return the invoice as requests Response instance
     api_key=CHARGILY_API_KEY,
     client='Client name goes here',
     client_email='Client email goes here',
@@ -92,10 +91,13 @@ invoice = make_payment(
 2- Validate Chargily Signature:
 
 ```python
+import os
 from chargily_epay_gateway.utils import signature_is_valid
 
+CHARGILY_SECRET_KEY = os.environ["CHARGILY_SECRET_KEY"]
+
 # Return True if signature is valid, otherwise False
-valid_signature = webhook_is_valid(request)
+valid_signature = signature_is_valid(CHARGILY_SECRET_KEY, invoice)
 ```
 
 # Configurations

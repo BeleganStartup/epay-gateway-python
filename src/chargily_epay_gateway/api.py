@@ -2,6 +2,7 @@
 import json
 
 from .constants import BASE_CHARGILY_API, PAYMENT_ENDPOINT
+from .exceptions import ChargilyErrorKeyMissing
 
 import requests
 
@@ -27,14 +28,18 @@ def make_payment(api_key, **kwargs):
 
 
 class Invoice:
+    API_KEY = None
 
-    def __init__(self, api_key, *args, **kwargs):
-        self.__api_key = api_key
+    def __init__(self, api_key=None, *args, **kwargs):
+        if api_key:
+            self.API_KEY = api_key
+        if self.API_KEY is None:
+            raise ChargilyErrorKeyMissing('API KEY')
         self.__invoice = None
 
     def make_payment(self, **kwargs):
         """ Return raw response from Chargily server """
-        self.__invoice = make_payment(self.__api_key, **kwargs)
+        self.__invoice = make_payment(self.API_KEY, **kwargs)
         return self.get_invoice()
 
     def get_invoice(self):
